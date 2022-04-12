@@ -30,18 +30,21 @@ return this
 }
 
 function hoursWorkedOnDate(ymd){
-    let timeIn = this.timeInEvents[0].hour
-    let timeOut = this.timeOutEvents[0].hour
-    if (ymd === this.timeInEvents[0].date){
-        if (timeIn > timeOut) {return (timeIn - timeOut)/100}
-        else if (timeOut > timeIn) {return(timeOut - timeIn)/100}
-    }
+    let timeIn = this.timeInEvents.find(x => x.date === ymd)
+    let timeOut = this.timeOutEvents.find(x => x.date === ymd)
+    let hrsWkd = (timeOut.hour - timeIn.hour)/100
+    return hrsWkd
 }
 
+
+
 function wagesEarnedOnDate(ymd) {
-    let hoursWorked = hoursWorkedOnDate.bind(this)
-  return  hoursWorked(ymd) * parseInt(this.payPerHour, 10)
+    let hoursWorked = hoursWorkedOnDate.call(this, ymd)
+    * this.payPerHour
+
+  return hoursWorked
 }
+
 /*
  We're giving you this function. Take a look at it, you might see some usage
  that's new and different. That's because we're avoiding a well-known, but
@@ -59,17 +62,16 @@ const allWagesFor = function () {
     const payable = eligibleDates.reduce(function (memo, d) {
         return memo + wagesEarnedOnDate.call(this, d)
     }.bind(this), 0) // <== Hm, why did we need to add bind() there? We'll discuss soon!
-
     return payable
 }
 
 function findEmployeeByFirstName (srcArray, fn) {
-    let src = srcArray
-  let emp = createEmployeeRecords(src);
-  let foundEmployee = emp.find(x => x.firstName === fn);
+  let foundEmployee = srcArray.find(x => x.firstName === fn);
   return foundEmployee
 }
 
 function calculatePayroll(arr) {
-    arr.reduce(() => {allWagesFor})
-}
+    console.log(arr)
+  let wages = arr.map(function(x) {return allWagesFor.call(x)})
+console.log(wages)
+return wages.reduce((x, y) => x +y)}
