@@ -39,8 +39,9 @@ function hoursWorkedOnDate(ymd){
 }
 
 function wagesEarnedOnDate(ymd) {
-    let hoursWorked = hoursWorkedOnDate.bind(this)
-  return  hoursWorked(ymd) * parseInt(this.payPerHour, 10)
+    let hoursWorked = hoursWorkedOnDate.call(this, ymd)
+    * this.payPerHour
+  return parseFloat(hoursWorked.toString())
 }
 /*
  We're giving you this function. Take a look at it, you might see some usage
